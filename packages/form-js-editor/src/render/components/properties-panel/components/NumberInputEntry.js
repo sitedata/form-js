@@ -4,6 +4,7 @@ import NumberInput from './NumberInput';
 
 export default function NumberInputEntry(props) {
   const {
+    debounce,
     editField,
     field,
     id,
@@ -27,6 +28,7 @@ export default function NumberInputEntry(props) {
   return (
     <div class="fjs-properties-panel-entry">
       <NumberInput
+        debounce={ debounce }
         id={ id }
         label={ label }
         max={ max }

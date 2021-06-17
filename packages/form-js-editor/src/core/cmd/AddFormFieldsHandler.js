@@ -6,7 +6,7 @@ import {
   updatePath
 } from './Util';
 
-export default class AddFormFieldHandler {
+export default class AddFormFieldsHandler {
 
   /**
    * @constructor
@@ -69,4 +69,4 @@ export default class AddFormFieldHandler {
   }
 }
 
-AddFormFieldHandler.$inject = [ 'formEditor', 'formFieldRegistry' ];
+AddFormFieldsHandler.$inject = [ 'formEditor', 'formFieldRegistry' ];

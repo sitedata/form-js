@@ -70,6 +70,22 @@
   border-radius: 3px;
 }
 
+/* WIP */
+
+.fjs-editor-container .fjs-element {
+  margin: 2px;
+  padding: 1px;
+}
+
+.fjs-editor-container .fjs-form-field.fjs-form-field-columns {
+  margin: 1px;
+}
+
+.fjs-column > .fjs-element {
+  height: 100%;
+  margin: 0 2px;
+}
+
 /**
  * Context Pad
  */

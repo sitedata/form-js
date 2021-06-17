@@ -238,3 +238,9 @@
 .fjs-container .fjs-form-field-text a {
   color: var(--color-blue-darken-48);
 }
+
+.fjs-container .fjs-form-field-columns {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+}

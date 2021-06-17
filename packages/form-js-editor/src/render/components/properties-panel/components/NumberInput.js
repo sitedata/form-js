@@ -14,7 +14,7 @@ export default function NumberInput(props) {
     value = '',
   } = props;
 
-  const onInput = debounce(event => {
+  let onInput = event => {
 
     const {
       validity,
@@ -24,7 +24,11 @@ export default function NumberInput(props) {
     if (validity.valid) {
       props.onInput(value ? parseInt(value, 10) : undefined);
     }
-  });
+  };
+
+  if (props.debounce) {
+    onInput = debounce(onInput);
+  }
 
   const onFocus = () => eventBus.fire('propertiesPanel.focusin');
 

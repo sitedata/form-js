@@ -2,37 +2,39 @@ import { Default } from '@bpmn-io/form-js-viewer';
 
 import { NumberInputEntry } from '../components';
 
-export default function ColumnsEntry(props) {
-  const {
-    editField,
-    field
-  } = props;
+import useService from '../../../hooks/useService';
 
-  const onInput = (value) => {
+export default function ColumnsEntry(props) {
+  const modeling = useService('modeling');
+
+  const { field } = props;
+
+  const onChange = (value) => {
     let components = field.components.slice();
 
     if (value > components.length) {
-      while (value > components.length) {
-        components.push(Default.create({ parent: field.id }));
-      }
-    } else {
-      components = components.slice(0, value);
-    }
+      const fields = [];
 
-    editField(field, 'components', components);
+      for (let i = 0; i < value - components.length, i++) {
+        fields.push(Default.create());
+      }
+
+      modeling.addFormFields(field, components.length, fields);
+    } else {
+      modeling.removeFormFields(field, value - components.length, components.length);
+    }
   };
 
   const value = field.components.length;
 
   return (
-    <div class="fjs-properties-panel-entry">
-      <NumberInputEntry
-        id="columns"
-        label="Columns"
-        onInput={ onInput }
-        value={ value }
-        min="1"
-        max="3" />
-    </div>
+    <NumberInputEntry
+      id="columns"
+      label="Columns"
+      onChange={ onChange }
+      value={ value }
+      min="1"
+      max="3"
+      debounce={ false } />
   );
 }

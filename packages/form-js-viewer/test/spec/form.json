@@ -5,30 +5,45 @@
       "text": "# Invoice\n\nLorem _ipsum_ __dolor__ `sit`.\n\nA list of BPMN symbols:\n\n* Start Event\n* Task\n\nLearn more about [forms](https://bpmn.io).\n  \n  \nThis [malicious link](javascript:throw onerror=alert,'some string',123,'haha') __should not work__."
     },
     {
-      "key": "creditor",
-      "label": "Creditor",
-      "type": "textfield",
-      "validate": {
-        "required": true
-      }
-    },
-    {
-      "description": "An invoice number in the format: C-123.",
-      "key": "invoiceNumber",
-      "label": "Invoice Number",
-      "type": "textfield",
-      "validate": {
-        "pattern": "^C-[0-9]+$"
-      }
-    },
-    {
-      "key": "amount",
-      "label": "Amount",
-      "type": "number",
-      "validate": {
-        "min": 0,
-        "max": 1000
-      }
+      "type": "columns",
+      "components": [
+        {
+          "type": "default",
+          "components": [
+            {
+              "key": "creditor",
+              "label": "Creditor",
+              "type": "textfield",
+              "validate": {
+                "required": true
+              }
+            }
+          ]
+        },
+        {
+          "type": "default",
+          "components": [
+            {
+              "description": "An invoice number in the format: C-123.",
+              "key": "invoiceNumber",
+              "label": "Invoice Number",
+              "type": "textfield",
+              "validate": {
+                "pattern": "^C-[0-9]+$"
+              }
+            },
+            {
+              "key": "amount",
+              "label": "Amount",
+              "type": "number",
+              "validate": {
+                "min": 0,
+                "max": 1000
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "key": "approved",

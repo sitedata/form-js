@@ -1,7 +1,7 @@
-import AddFormFieldHandler from './cmd/AddFormFieldHandler';
+import AddFormFieldsHandler from './cmd/AddFormFieldsHandler';
 import EditFormFieldHandler from './cmd/EditFormFieldHandler';
 import MoveFormFieldHandler from './cmd/MoveFormFieldHandler';
-import RemoveFormFieldHandler from './cmd/RemoveFormFieldHandler';
+import RemoveFormFieldsHandler from './cmd/RemoveFormFieldsHandler';
 
 
 export default class Modeling {
@@ -23,21 +23,29 @@ export default class Modeling {
 
   getHandlers() {
     return {
-      'formField.add': AddFormFieldHandler,
+      'formFields.add': AddFormFieldsHandler,
       'formField.edit': EditFormFieldHandler,
       'formField.move': MoveFormFieldHandler,
-      'formField.remove': RemoveFormFieldHandler
+      'formFields.remove': RemoveFormFieldsHandler
     };
   }
 
   addFormField(targetFormField, targetIndex, newFormField) {
+    this.addFormFields(targetFormField, targetIndex, newFormField);
+  }
+
+  addFormFields(targetFormField, targetIndex, newFormFields) {
+    if (!Array.isArray(newFormFields)) {
+      newFormFields = [ newFormFields ];
+    }
+
     const context = {
-      newFormField,
+      newFormFields,
       targetFormField,
       targetIndex
     };
 
-    this._commandStack.execute('formField.add', context);
+    this._commandStack.execute('formFields.add', context);
   }
 
   editFormField(formField, key, value) {
@@ -62,12 +70,17 @@ export default class Modeling {
   }
 
   removeFormField(sourceFormField, sourceIndex) {
+    this.removeFormFields(sourceFormField, sourceIndex, sourceIndex + 1);
+  }
+
+  removeFormFields(sourceFormField, sourceIndex, endIndex) {
     const context = {
       sourceFormField,
-      sourceIndex
+      sourceIndex,
+      endIndex
     };
 
-    this._commandStack.execute('formField.remove', context);
+    this._commandStack.execute('formFields.remove', context);
   }
 }
 
