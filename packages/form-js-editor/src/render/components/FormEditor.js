@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState
 } from 'preact/hooks';
 
@@ -44,7 +45,8 @@ function Empty(props) {
 }
 
 function Element(props) {
-  const formEditor = useService('formEditor'),
+  const eventBus = useService('eventBus'),
+        formEditor = useService('formEditor'),
         formFieldRegistry = useService('formFieldRegistry'),
         modeling = useService('modeling'),
         selection = useService('selection');
@@ -57,6 +59,20 @@ function Element(props) {
     _id,
     type
   } = field;
+
+  const ref = useRef();
+
+  function scrollIntoView({ id }) {
+    if (id === _id && ref.current) {
+      ref.current.scrollIntoView();
+    }
+  }
+
+  useEffect(() => {
+    eventBus.on('scrollIntoView', scrollIntoView);
+
+    return () => eventBus.off('scrollIntoView', scrollIntoView);
+  }, []);
 
   function onClick(event) {
     if (type === 'default') {
@@ -101,7 +117,8 @@ function Element(props) {
       class={ classes.join(' ') }
       data-id={ _id }
       data-field-type={ type }
-      onClick={ onClick }>
+      onClick={ onClick }
+      ref={ ref }>
       <ContextPad>
         {
           selection.get() === _id ? <button class="fjs-context-pad-item" onClick={ onRemove }><ListDeleteIcon /></button> : null
@@ -145,7 +162,7 @@ export default function FormEditor(props) {
 
   const [ _, setSelection ] = useState(null);
 
-  eventBus.on('selection.changed', (newSelection) => {
+  eventBus.on('selection.changed', ({ selection: newSelection }) => {
     setSelection(newSelection);
   });
 

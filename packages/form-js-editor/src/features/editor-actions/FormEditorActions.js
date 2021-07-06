@@ -16,8 +16,10 @@ export default class FormEditorActions extends EditorActions {
 
   _registerDefaultActions(injector) {
     const commandStack = injector.get('commandStack', false),
+          eventBus = injector.get('eventBus', false),
           formFieldRegistry = injector.get('formFieldRegistry', false),
-          modeling = injector.get('modeling', false);
+          modeling = injector.get('modeling', false),
+          selection = injector.get('selection', false);
 
     if (commandStack) {
 
@@ -61,6 +63,16 @@ export default class FormEditorActions extends EditorActions {
         };
       }
     });
+
+    if (selection) {
+
+      // @ts-ignore
+      this.register('selectElement', ({ id }) => {
+        selection.set(id);
+
+        eventBus.fire('scrollIntoView', { id });
+      });
+    }
   }
 }
 
