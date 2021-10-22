@@ -15,6 +15,7 @@
     "lint": "eslint packages",
     "lint:types": "tsc --noEmit --pretty",
     "postinstall": "lerna bootstrap --hoist",
+    "prepare": "run-s build-distro",
     "reinstall": "npm ci",
     "release": "run-s distro test \"lerna-publish -- {@}\" --",
     "test": "lerna run test",
