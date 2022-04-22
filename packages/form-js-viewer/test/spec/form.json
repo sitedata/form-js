@@ -56,6 +56,29 @@
       ]
     },
     {
+      "key": "mailto",
+      "label": "Email Summary To",
+      "type": "checklist",
+      "values": [
+        {
+          "label": "Creditor",
+          "value": "creditor"
+        },
+        {
+          "label": "Self",
+          "value": "self"
+        },
+        {
+          "label": "Manager",
+          "value": "manager"
+        },
+        {
+          "label": "Region Manager",
+          "value": "region-manager"
+        }
+      ]
+    },
+    {
       "key": "language",
       "label": "Language",
       "type": "select",
