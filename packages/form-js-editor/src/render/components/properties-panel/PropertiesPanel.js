@@ -7,6 +7,7 @@ import {
 
 import {
   INPUTS,
+  OPTIONS_INPUTS,
   textToLabel
 } from './Util';
 
@@ -29,13 +30,13 @@ const labelsByType = {
 };
 
 function getGroups(field, editField) {
-  const { type } = field;
+  const { type, valuesKey } = field;
 
   const groups = [
     GeneralGroup(field, editField)
   ];
 
-  if (type === 'radio' || type === 'select') {
+  if (OPTIONS_INPUTS.includes(type) && !valuesKey) {
     groups.push(ValuesGroup(field, editField));
   }
 

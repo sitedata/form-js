@@ -53,6 +53,7 @@ export default function DefaultValueEntry(props) {
     );
   }
 
+  // todo(pinussilvestrus): what to display here on "valuesKey" set
   if (type === 'radio' || type === 'select') {
     const options = [
       {

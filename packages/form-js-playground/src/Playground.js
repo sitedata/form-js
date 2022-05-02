@@ -195,6 +195,8 @@ function PlaygroundRoot(props) {
     });
 
     form.on('changed', event => {
+
+      // todo(pinussilvestrus): do we need remove data coming from "valuesKey"?
       setResultData(event.data);
     });
 
@@ -261,6 +263,7 @@ function PlaygroundRoot(props) {
     setShowEmbed(true);
   }, []);
 
+  // todo(pinussilvestrus): with increasing amount of input data, do we need resizable sections?
   return (
     <div class="fjs-pgl-root">
       <div class="fjs-pgl-modals">

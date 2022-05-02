@@ -9,10 +9,14 @@ import {
   IdEntry,
   KeyEntry,
   LabelEntry,
-  TextEntry
+  TextEntry,
+  ValuesKeyEntry
 } from '../entries';
 
-import { INPUTS } from '../Util';
+import {
+  INPUTS,
+  OPTIONS_INPUTS
+} from '../Util';
 
 export default function GeneralGroup(field, editField) {
   const { type } = field;
@@ -32,6 +36,10 @@ export default function GeneralGroup(field, editField) {
 
   if (INPUTS.includes(type)) {
     entries.push(<KeyEntry editField={ editField } field={ field } />);
+  }
+
+  if (OPTIONS_INPUTS.includes(type)) {
+    entries.push(<ValuesKeyEntry editField={ editField } field={ field } />);
   }
 
   if (INPUTS.includes(type)) {

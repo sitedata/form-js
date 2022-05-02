@@ -1,5 +1,7 @@
 import { useContext } from 'preact/hooks';
 
+import useValues from '../../hooks/useValues';
+
 import { FormContext } from '../../context';
 
 import Description from '../Description';
@@ -26,8 +28,7 @@ export default function Radio(props) {
     description,
     id,
     label,
-    validate = {},
-    values
+    validate = {}
   } = field;
 
   const { required } = validate;
@@ -38,6 +39,8 @@ export default function Radio(props) {
       value: v
     });
   };
+
+  const values = useValues(field);
 
   const { formId } = useContext(FormContext);
 

@@ -1,5 +1,7 @@
 import { useContext } from 'preact/hooks';
 
+import useValues from '../../hooks/useValues';
+
 import { FormContext } from '../../context';
 
 import Description from '../Description';
@@ -25,8 +27,7 @@ export default function Select(props) {
     description,
     id,
     label,
-    validate = {},
-    values
+    validate = {}
   } = field;
 
   const { required } = validate;
@@ -37,6 +38,8 @@ export default function Select(props) {
       value: target.value === '' ? null : target.value
     });
   };
+
+  const values = useValues(field);
 
   const { formId } = useContext(FormContext);
 

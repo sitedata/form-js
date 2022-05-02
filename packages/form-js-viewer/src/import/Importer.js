@@ -131,19 +131,40 @@ export default class Importer {
       const {
         defaultValue,
         _path,
-        type
+        type,
+        valuesKey
       } = formField;
 
+      let appendData = {
+        ...importedData
+      };
+
       if (!_path) {
-        return importedData;
+        return appendData;
       }
+
 
       // (1) try to get value from data
       // (2) try to get default value from form field
       // (3) get empty value from form field
+      appendData = {
+        ...appendData,
+        [ _path[ 0 ] ]: get(data, _path, isUndefined(defaultValue) ? this._formFields.get(type).emptyValue : defaultValue)
+      };
+
+      // (4) keep values when defined via valuesKey
+      // todo(pinussilvestrus): do we need to validate these values on import?
+      // todo(pinussilvestrus): allow population via functions
+      if (valuesKey) {
+        appendData = {
+          ...appendData,
+          [ valuesKey ]: get(data, [ valuesKey ], null)
+        };
+      }
+
       return {
         ...importedData,
-        [ _path[ 0 ] ]: get(data, _path, isUndefined(defaultValue) ? this._formFields.get(type).emptyValue : defaultValue)
+        ...appendData
       };
     }, {});
   }

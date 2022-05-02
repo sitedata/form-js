@@ -46,7 +46,33 @@ describe('playground', function() {
       invoiceNumber: 'C-123',
       approved: true,
       approvedBy: 'John Doe',
-      product: 'camunda-cloud',
+      product: 'desktop-modeler',
+      productValues: [
+        {
+          label: 'Console',
+          value: 'console'
+        },
+        {
+          label: 'Desktop Modeler',
+          value: 'desktop-modeler'
+        },
+        {
+          label: 'Operate',
+          value: 'operate'
+        },
+        {
+          label: 'Optimize',
+          value: 'optimize'
+        },
+        {
+          label: 'Tasklist',
+          value: 'tasklist'
+        },
+        {
+          label: 'Web Modeler',
+          value: 'web-modeler'
+        }
+      ],
       language: 'english'
     };
 

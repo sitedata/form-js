@@ -8,4 +8,5 @@ export { default as KeyEntry } from './KeyEntry';
 export { default as LabelEntry } from './LabelEntry';
 export { default as TextEntry } from './TextEntry';
 export { default as ValueEntry } from './ValueEntry';
+export { default as ValuesKeyEntry } from './ValuesKeyEntry';
 export { default as CustomValueEntry } from './CustomValueEntry';

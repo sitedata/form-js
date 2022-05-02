@@ -53,7 +53,7 @@ export default function ValuesGroup(field, editField) {
   const hasEntries = values.length > 0;
 
   return (
-    <Group label="Values" addEntry={ addEntry } hasEntries={ hasEntries }>
+    <Group label="Static Values" addEntry={ addEntry } hasEntries={ hasEntries }>
       {
         values.map((value, index) => {
           const { label } = value;
