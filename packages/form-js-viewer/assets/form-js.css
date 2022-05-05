@@ -236,3 +236,86 @@
 .fjs-container .fjs-form-field-text a {
   color: var(--color-blue-205-100-45);
 }
+
+.fjs-container .fjs-taglist-root .fjs-taglist-search-container {
+	border-radius: 3px;
+	padding: 5px;
+	gap: 5px;
+  background-color: var(--color-background);
+	border: var(--color-borders) solid 1px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+
+.fjs-container .fjs-taglist-root .fjs-taglist-search-container:focus-within {
+	outline: var(--color-borders) solid 1px;
+}
+
+.fjs-container .fjs-taglist-root .fjs-taglist-search-container.disabled {
+	border: var(--color-borders-disabled) solid 1px;
+  background-color: var(--color-background-disabled);
+}
+
+.fjs-container .fjs-taglist-root .fjs-dropdownlist-item-container {
+	user-select: none;
+	overflow-y: auto;
+	scroll-behavior: smooth;
+	transition: max-height ease-in-out 400ms;
+	box-shadow: 0px 0px 5px #ccc;
+	border-radius: 3px;
+	margin-top: 3px;
+}
+
+.fjs-container .fjs-taglist-root .fjs-dropdownlist-item-container .fjs-dropdownlist-item {
+	padding: 4px 8px;
+	border-bottom: 1px solid #ededed;
+	color: #464646;
+}
+
+.fjs-container .fjs-taglist-root .fjs-dropdownlist-item-container .fjs-dropdownlist-item.focused {
+  background-color: rgb(227, 227, 227);
+  color: black;
+}
+
+.fjs-container .fjs-taglist-root .fjs-taglist-selected-container {
+  min-height: 40px;
+  scroll-behavior: auto;
+  user-select: none;
+  margin-top: -1px;
+  border-top: var(--color-borders) solid 1px;
+  padding: 0 10px 10px 0;
+}
+
+.fjs-taglist-input {
+  border: none;
+  background-color: transparent;
+  min-width: 200px;
+  height: 22px;
+  flex-grow: 1;
+}
+
+.fjs-taglist-input:focus-visible {
+  outline: none;
+}
+
+.fjs-container .fjs-taglist-root .fjs-taglist-search-container .fjs-taglist-tag {
+  display: flex;
+  user-select: none;
+  border-radius: 2px;
+  background-color: rgb(218, 218, 218);
+  overflow: hidden;
+}
+
+.fjs-container .fjs-taglist-root .fjs-taglist-search-container .fjs-taglist-tag .fjs-taglist-tag-label {
+  padding: 2px 6px 2px 8px;
+}
+
+.fjs-container .fjs-taglist-root .fjs-taglist-search-container .fjs-taglist-tag .fjs-taglist-tag-remove {
+	background-color: #a8a8a8;
+	overflow: clip;
+	width: 22px;
+	height: 22px;
+	text-align: center;
+	line-height: 21px;
+}

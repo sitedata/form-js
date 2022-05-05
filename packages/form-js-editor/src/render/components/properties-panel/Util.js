@@ -40,5 +40,6 @@ export const INPUTS = [
   'number',
   'radio',
   'select',
+  'taglist',
   'textfield'
 ];
