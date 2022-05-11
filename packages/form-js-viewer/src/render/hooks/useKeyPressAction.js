@@ -1,28 +1,18 @@
 import { useEffect } from 'preact/hooks';
 
-export default function useKeyPressAction(targetKey, action) {
-
-  let callback;
+export default function useKeyDownAction(targetKey, action, listenerElement = window) {
 
   function downHandler({ key }) {
     if (key === targetKey) {
-      callback = action();
+      action();
     }
   }
 
-  const upHandler = ({ key }) => {
-    if (key === targetKey && callback && typeof callback === 'function') {
-      callback();
-    }
-  };
-
   useEffect(() => {
-    window.addEventListener('keydown', downHandler);
-    window.addEventListener('keyup', upHandler);
+    listenerElement.addEventListener('keydown', downHandler);
 
     return () => {
-      window.removeEventListener('keydown', downHandler);
-      window.removeEventListener('keyup', upHandler);
+      listenerElement.removeEventListener('keydown', downHandler);
     };
   });
 }

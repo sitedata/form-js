@@ -1,11 +1,15 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'preact/hooks';
-import useKeyPress from '../../../hooks/useKeyPress';
-import useKeyPressAction from '../../../hooks/useKeyPressAction';
+import useKeyDownAction from '../../../hooks/useKeyPressAction';
 
-export default function DropdownList({ values = [], getLabel = (v) => v, onValueSelected = (v) => {}, isExpanded = false, height = 180 }) {
+export default function DropdownList({
+  values = [],
+  getLabel = (v) => v,
+  onValueSelected = (v) => {},
+  height = 180,
+  emptylistMessage = 'No results',
+  listenerElement })
+{
 
-  const downPress = useKeyPress('ArrowDown');
-  const upPress = useKeyPress('ArrowUp');
   const [mouseControl, setMouseControl] = useState(true);
   const [focusedValueIndex, setFocusedValueIndex] = useState(0);
   const dropdownContainer = useRef();
@@ -28,19 +32,25 @@ export default function DropdownList({ values = [], getLabel = (v) => v, onValue
     }
   }, [focusedValueIndex, values.length]);
 
-  useEffect(() => {
-    if (isExpanded && values.length && downPress) {
-      changeSelectionIndex(1);
-      setMouseControl(false);
-    }
-  }, [isExpanded, changeSelectionIndex, downPress, values.length]);
-
-  useEffect(() => {
-    if (isExpanded && values.length && upPress) {
+  useKeyDownAction('ArrowUp', () => {
+    if (values.length) {
       changeSelectionIndex(-1);
       setMouseControl(false);
     }
-  }, [isExpanded, changeSelectionIndex, upPress, values.length]);
+  }, listenerElement);
+
+  useKeyDownAction('ArrowDown', () => {
+    if (values.length) {
+      changeSelectionIndex(1);
+      setMouseControl(false);
+    }
+  }, listenerElement);
+
+  useKeyDownAction('Enter', () => {
+    if (focusedItem) {
+      onValueSelected(focusedItem);
+    }
+  }, listenerElement);
 
   useEffect(() => {
     const individualEntries = dropdownContainer.current.children;
@@ -48,12 +58,6 @@ export default function DropdownList({ values = [], getLabel = (v) => v, onValue
       individualEntries[focusedValueIndex].scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
   }, [focusedValueIndex, mouseControl]);
-
-  useKeyPressAction('Enter', () => {
-    if (isExpanded && focusedItem) {
-      onValueSelected(focusedItem);
-    }
-  });
 
   const mouseMove = (e, i) => {
     const userMoved = !mouseScreenPos.current || mouseScreenPos.current.x !== e.screenX && mouseScreenPos.current.y !== e.screenY;
@@ -72,9 +76,9 @@ export default function DropdownList({ values = [], getLabel = (v) => v, onValue
     ref={ dropdownContainer }
     tabIndex={ -1 }
     class="fjs-dropdownlist-item-container"
-    style={ { maxHeight: isExpanded ? height : 0 } }>
+    style={ { maxHeight: height } }>
     {
-      values.map((v, i) => {
+      !!values.length && values.map((v, i) => {
         return (
           <div
             class={ 'fjs-dropdownlist-item' + (focusedValueIndex === i ? ' focused' : '') }
@@ -85,6 +89,9 @@ export default function DropdownList({ values = [], getLabel = (v) => v, onValue
           </div>
         );
       })
+    }
+    {
+      !values.length && <div class="fjs-dropdownlist-empty">{emptylistMessage}</div>
     }
   </div>;
 }

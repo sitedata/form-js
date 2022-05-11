@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 
-export default function useKeyPress(targetKey) {
+export default function useKeyPress(targetKey, listenerElement = window) {
   const [keyPressed, setKeyPressed] = useState(false);
 
   function downHandler({ key }) {
@@ -16,12 +16,12 @@ export default function useKeyPress(targetKey) {
   };
 
   useEffect(() => {
-    window.addEventListener('keydown', downHandler);
-    window.addEventListener('keyup', upHandler);
+    listenerElement.addEventListener('keydown', downHandler);
+    listenerElement.addEventListener('keyup', upHandler);
 
     return () => {
-      window.removeEventListener('keydown', downHandler);
-      window.removeEventListener('keyup', upHandler);
+      listenerElement.removeEventListener('keydown', downHandler);
+      listenerElement.removeEventListener('keyup', upHandler);
     };
   });
 

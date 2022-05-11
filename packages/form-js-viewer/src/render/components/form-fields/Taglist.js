@@ -1,6 +1,9 @@
 import { useContext, useEffect, useRef, useState } from 'preact/hooks';
+import useKeyDownAction from '../../hooks/useKeyPressAction';
 
 import { FormContext } from '../../context';
+
+import CloseIcon from './icons/Close.svg';
 
 import Description from '../Description';
 import Errors from '../Errors';
@@ -20,14 +23,14 @@ export default function Taglist(props) {
     disabled,
     errors = [],
     field,
-    value = []
+    value : values = []
   } = props;
 
   const {
     description,
     id,
     label,
-    values
+    values : options
   } = field;
 
   const { formId } = useContext(FormContext);
@@ -35,30 +38,62 @@ export default function Taglist(props) {
   const [selectedValues, setSelectedValues] = useState([]);
   const [filteredValues, setFilteredValues] = useState([]);
   const [isDropdownExpanded, setIsDropdownExpanded] = useState(false);
+  const [hasValuesLeft, setHasValuesLeft] = useState(true);
+  const [escapeClose, setEscapeClose] = useState(false);
   const searchbar = useRef();
 
 
   // Usage of stringify is necessary here because we want this effect to only trigger when there is a real change to the array
   useEffect(() => {
-    setSelectedValues(values.filter(v => value.includes(v.value)));
-  }, [JSON.stringify(value), values]);
+    const selectedValues = values.map(v => options.find(o => o.value === v)).filter(v => v !== undefined);
+    setSelectedValues(selectedValues);
+  }, [JSON.stringify(values), options]);
 
   useEffect(() => {
-    setFilteredValues(values.filter((v) => v.label && (v.label.includes(filter) || v.value.includes(filter)) && !value.includes(v.value)));
-  }, [filter, JSON.stringify(value), values]);
+    setFilteredValues(options.filter((o) => o.label && (o.label.includes(filter) || o.value.includes(filter)) && !values.includes(o.value)));
+  }, [filter, JSON.stringify(values), options]);
+
+  useEffect(() => {
+    setHasValuesLeft(selectedValues.length < options.length);
+  }, [selectedValues.length, options.length]);
 
   const onFilterChange = ({ target }) => {
+    setEscapeClose(false);
     setFilter(target.value);
   };
 
-  const selectValue = (item) => {
-    searchbar.current.focus();
-    props.onChange({ value: [...value, item.value], field });
+  const selectValue = (option) => {
+    setFilter('');
+    props.onChange({ value: [...values, option.value], field });
   };
 
-  const deselectValue = (item) => {
-    searchbar.current.focus();
-    props.onChange({ value: value.filter((v) => v != item.value), field });
+  const deselectValue = (option) => {
+    props.onChange({ value: values.filter((v) => v != option.value), field });
+  };
+
+  const onInputKeyDown = (e) => {
+
+    switch (e.key) {
+    case 'ArrowUp':
+    case 'ArrowDown':
+
+      // We do not want the cursor to seek in the search field when we press up and down
+      e.preventDefault();
+      break;
+    case 'Backspace':
+      if (!filter && selectedValues.length) {
+        deselectValue(selectedValues[selectedValues.length - 1]);
+      }
+      break;
+    case 'Escape':
+      setEscapeClose(true);
+      break;
+    case 'Enter':
+      if (escapeClose) {
+        setEscapeClose(false);
+      }
+      break;
+    }
   };
 
   return <div class={ formFieldClasses(type, errors) }>
@@ -69,11 +104,11 @@ export default function Taglist(props) {
         {!disabled &&
           selectedValues.map((sv) => {
             return (
-              <div class="fjs-taglist-tag">
+              <div class="fjs-taglist-tag" onMouseDown={ (e) => e.preventDefault() }>
                 <span class="fjs-taglist-tag-label">
                   {sv.label}
                 </span>
-                <span class="fjs-taglist-tag-remove" onMouseDown={ (e) => { e.preventDefault(); deselectValue(sv); } }>🗙</span>
+                <span class="fjs-taglist-tag-remove" onMouseDown={ () => deselectValue(sv) }><CloseIcon /></span>
               </div>
             );
           })
@@ -86,16 +121,21 @@ export default function Taglist(props) {
           onChange={ onFilterChange }
           type="text"
           value={ filter }
-          placeholder="Add values"
+          placeholder={ 'Search' }
           autoComplete="off"
+          onKeyDown={ (e) => onInputKeyDown(e) }
+          onMouseDown={ () => setEscapeClose(false) }
           onFocus={ () => setIsDropdownExpanded(true) }
-          onBlur={ () => setIsDropdownExpanded(false) } />
+          onBlur={ () => { setIsDropdownExpanded(false); setFilter(''); } } />
       </div>
-      {!disabled && <DropdownList
-        values={ filteredValues }
-        getLabel={ (v) => v.label }
-        onValueSelected={ (v) => selectValue(v) }
-        isExpanded={ isDropdownExpanded } />}
+      <div class="fjs-taglist-dropdownlist-anchor">
+        {!disabled && isDropdownExpanded && !escapeClose && <DropdownList
+          values={ filteredValues }
+          getLabel={ (v) => v.label }
+          onValueSelected={ (v) => selectValue(v) }
+          emptylistMessage={ hasValuesLeft ? 'No results' : 'All values selected' }
+          listenerElement={ searchbar.current } />}
+      </div>
     </div>
     <Description description={ description } />
     <Errors errors={ errors } />
@@ -118,3 +158,4 @@ Taglist.type = type;
 Taglist.label = 'Taglist';
 Taglist.keyed = true;
 Taglist.emptyValue = [];
+
