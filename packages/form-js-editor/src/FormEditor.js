@@ -7,6 +7,9 @@ import core from './core';
 import EditorActionsModule from './features/editor-actions';
 import KeyboardModule from './features/keyboard';
 import ModelingModule from './features/modeling';
+
+// todo(pinussilvestrus): move me to features
+import PropertiesPanelModule from './render/components/properties-panel';
 import SelectionModule from './features/selection';
 
 const ids = new Ids([ 32, 36, 1 ]);
@@ -295,6 +298,7 @@ export default class FormEditor {
     return [
       ModelingModule,
       EditorActionsModule,
+      PropertiesPanelModule,
       KeyboardModule,
       SelectionModule
     ];

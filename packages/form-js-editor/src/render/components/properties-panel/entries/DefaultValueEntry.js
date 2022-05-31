@@ -9,7 +9,7 @@ import {
 
 import { get } from 'min-dash';
 
-import { useService } from '../../../hooks';
+import { usePropertiesPanelService as useService } from '../../../hooks';
 
 import { INPUTS } from '../Util';
 

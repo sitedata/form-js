@@ -11,17 +11,11 @@ function pgl(plugins=[]) {
     alias({
       entries: [
         { find: 'react', replacement: 'preact/compat' },
-        { find: 'react-dom', replacement: 'preact/compat' },
-
-        // we need this to make sure we use the same
-        // preact version for the properties panel
-        { find: '../preact', replacement: 'preact' },
-        { find: '../preact/hooks', replacement: 'preact/hooks' },
-        { find: '../preact/jsx-runtime', replacement: 'preact/jsx-runtime' }
+        { find: 'react-dom', replacement: 'preact/compat' }
       ]
     }),
     resolve({
-      resolveOnly: [ 'diagram-js', '@bpmn-io/properties-panel' ]
+      resolveOnly: [ 'diagram-js' ]
     }),
     reactSvg(),
     babel({
@@ -62,7 +56,8 @@ export default [
       'preact/hooks',
       'preact/compat',
       'dragula',
-      '@bpmn-io/form-js-viewer'
+      '@bpmn-io/form-js-viewer',
+      '@bpmn-io/properties-panel'
     ],
     plugins: pgl([
       copy({

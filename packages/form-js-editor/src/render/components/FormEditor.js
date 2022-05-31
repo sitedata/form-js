@@ -18,7 +18,6 @@ import useService from '../hooks/useService';
 import { DragAndDropContext } from '../context';
 
 import Palette from './palette/Palette';
-import PropertiesPanel from './properties-panel/PropertiesPanel';
 
 import dragula from 'dragula';
 
@@ -150,9 +149,12 @@ export default function FormEditor(props) {
         formFieldRegistry = useService('formFieldRegistry'),
         injector = useService('injector'),
         modeling = useService('modeling'),
-        selection = useService('selection');
+        selection = useService('selection'),
+        propertiesPanel = useService('propertiesPanel');
 
   const { schema } = formEditor._getState();
+
+  const propertiesPanelRef = useRef(null);
 
   const [ selectedFormField, setSelection ] = useState(schema);
 
@@ -289,6 +291,14 @@ export default function FormEditor(props) {
 
   const editField = useCallback((formField, key, value) => modeling.editFormField(formField, key, value), [ modeling ]);
 
+  useEffect(() => {
+    propertiesPanel.attachTo(propertiesPanelRef.current);
+  }, [ propertiesPanelRef, propertiesPanel ]);
+
+  useEffect(() => {
+    propertiesPanel.renderPanel(selectedFormField, editField);
+  }, [ selectedFormField, editField ]);
+
   return (
     <div class="fjs-form-editor">
 
@@ -308,9 +318,7 @@ export default function FormEditor(props) {
         <CreatePreview />
       </DragAndDropContext.Provider>
 
-      <div class="fjs-properties-container">
-        <PropertiesPanel field={ selectedFormField } editField={ editField } />
-      </div>
+      <div class="fjs-properties-container" ref={ propertiesPanelRef } />
     </div>
   );
 }

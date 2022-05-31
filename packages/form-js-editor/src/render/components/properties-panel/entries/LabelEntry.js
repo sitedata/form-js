@@ -2,7 +2,7 @@ import { get } from 'min-dash';
 
 import { INPUTS } from '../Util';
 
-import { useService } from '../../../hooks';
+import { usePropertiesPanelService as useService } from '../../../hooks';
 
 import { TextFieldEntry, isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
 

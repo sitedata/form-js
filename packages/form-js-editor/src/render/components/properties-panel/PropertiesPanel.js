@@ -1,5 +1,7 @@
 import { PropertiesPanel } from '@bpmn-io/properties-panel';
 
+import { PropertiesPanelContext } from '../../context';
+
 import { PropertiesPanelHeaderProvider } from './PropertiesPanelHeaderProvider';
 import { PropertiesPanelPlaceholderProvider } from './PropertiesPanelPlaceholderProvider';
 
@@ -9,10 +11,6 @@ import {
   ValidationGroup,
   ValuesGroup
 } from './groups';
-
-import {
-  useService
-} from '../../hooks';
 
 function getGroups(field, editField) {
 
@@ -34,10 +32,16 @@ function getGroups(field, editField) {
 export default function FormPropertiesPanel(props) {
   const {
     editField,
-    field
+    eventBus,
+    field,
+    injector
   } = props;
 
-  const eventBus = useService('eventBus');
+  const propertiesPanelContext = {
+    getService(type, strict = true) {
+      return injector.get(type, strict);
+    }
+  };
 
   const onFocus = () => eventBus.fire('propertiesPanel.focusin');
 
@@ -50,13 +54,15 @@ export default function FormPropertiesPanel(props) {
       onFocusCapture={ onFocus }
       onBlurCapture={ onBlur }
     >
-      <PropertiesPanel
-        element={ field }
-        eventBus={ eventBus }
-        groups={ getGroups(field, editField) }
-        headerProvider={ PropertiesPanelHeaderProvider }
-        placeholderProvider={ PropertiesPanelPlaceholderProvider }
-      />
+      <PropertiesPanelContext.Provider value={ propertiesPanelContext }>
+        <PropertiesPanel
+          element={ field }
+          eventBus={ eventBus }
+          groups={ getGroups(field, editField) }
+          headerProvider={ PropertiesPanelHeaderProvider }
+          placeholderProvider={ PropertiesPanelPlaceholderProvider }
+        />
+      </PropertiesPanelContext.Provider>
     </div>
   );
 }
