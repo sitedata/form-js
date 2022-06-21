@@ -11,10 +11,10 @@ import { get } from 'min-dash';
 
 import { useService } from '../../../hooks';
 
-import { INPUTS } from '../Util';
+import { INPUTS, OPTIONS_INPUTS } from '../Util';
 
 
-export default function DefaultValueEntry(props) {
+export default function DefaultOptionEntry(props) {
   const {
     editField,
     field
@@ -26,7 +26,8 @@ export default function DefaultValueEntry(props) {
 
   const entries = [];
 
-  if (!INPUTS.includes(type)) {
+  // Only make default options available when they are statically defined
+  if (!INPUTS.includes(type) || OPTIONS_INPUTS.includes(type) && !field.values) {
     return entries;
   }
 
@@ -53,13 +54,15 @@ export default function DefaultValueEntry(props) {
     });
   }
 
-  if (type === 'radio' || type === 'select') {
+  if ((type === 'radio' || type === 'select')) {
     entries.push({
       ...defaultOptions,
-      component: DefaultValueMulti,
+      component: DefaultValueSingleSelect,
       isEdited: isSelectEntryEdited
     });
   }
+
+  // Todo: implement a multiselect equivalent (https://github.com/bpmn-io/form-js/issues/265)
 
   if (type === 'textfield') {
     entries.push({
@@ -147,7 +150,7 @@ function DefaultValueNumber(props) {
   });
 }
 
-function DefaultValueMulti(props) {
+function DefaultValueSingleSelect(props) {
   const {
     editField,
     field,

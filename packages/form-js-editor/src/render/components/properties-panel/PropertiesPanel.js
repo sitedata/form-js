@@ -7,7 +7,7 @@ import {
   CustomValuesGroup,
   GeneralGroup,
   ValidationGroup,
-  ValuesGroup
+  OptionsGroup
 } from './groups';
 
 import {
@@ -22,7 +22,7 @@ function getGroups(field, editField) {
 
   const groups = [
     GeneralGroup(field, editField),
-    ValuesGroup(field, editField),
+    OptionsGroup(field, editField),
     ValidationGroup(field, editField),
     CustomValuesGroup(field, editField)
   ];

@@ -131,20 +131,32 @@ export default class Importer {
       const {
         defaultValue,
         _path,
-        type
+        type,
+        optionsKey
       } = formField;
 
-      if (!_path) {
-        return importedData;
+      // get values defined via optionsKey
+
+      if (optionsKey) {
+        importedData = {
+          ...importedData,
+          [ optionsKey ]: get(data, [ optionsKey ])
+        };
       }
 
-      // (1) try to get value from data
-      // (2) try to get default value from form field
-      // (3) get empty value from form field
-      return {
-        ...importedData,
-        [ _path[ 0 ] ]: get(data, _path, isUndefined(defaultValue) ? this._formFields.get(type).emptyValue : defaultValue)
-      };
+      // try to get value from data
+      // if unavailable - try to get default value from form field
+      // if unavailable - get empty value from form field
+
+      if (_path) {
+        importedData = {
+          ...importedData,
+          [_path[0]]: get(data, _path, isUndefined(defaultValue) ? this._formFields.get(type).emptyValue : defaultValue),
+        };
+      }
+
+      return importedData;
+
     }, {});
   }
 }
