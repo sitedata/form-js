@@ -7,47 +7,68 @@ import { arrayAdd } from '../Util';
 import { useService } from '../../../hooks';
 
 
-export default function OptionsSourceEntry(props) {
+export function OptionsSourceChooserEntry(props) {
   const {
     editField,
     field
   } = props;
 
-  const entries = [];
-
-  entries.push({
+  return [ {
     id: 'options-source',
     component: OptionsSourceSelect,
     isEdited: isSelectEntryEdited,
     editField,
     field,
-  });
+  } ];
+}
+
+export function OptionsSourceEntry(props) {
+  if (isOptionsDynamic(props)) {
+    return OptionsSourceDynamicEntry(props);
+  } else {
+    return OptionsSourceStaticEntry(props);
+  }
+}
+
+export function isOptionsDynamic(props) {
+  const { field } = props;
 
   const source = _getOptionsSource(field);
 
-  if (source === OPTIONS_SOURCES.INPUT) {
-    entries.push({
-      id: 'input-options-key',
-      component: InputOptionsKey,
-      label: 'Input Options Key',
-      description: 'Define which input property to populate the options from',
-      isEdited: isSelectEntryEdited,
-      editField,
-      field,
-    });
-  }
-  else if (source === OPTIONS_SOURCES.STATIC) {
-    entries.push({
-      id: 'static-options',
-      component: StaticOptions,
-      label: 'Options',
-      isEdited: isTextFieldEntryEdited,
-      editField,
-      field,
-    });
-  }
+  return source === OPTIONS_SOURCES.INPUT;
+}
 
-  return entries;
+function OptionsSourceStaticEntry(props) {
+  const {
+    editField,
+    field
+  } = props;
+
+  return [{
+    id: 'static-options',
+    component: StaticOptions,
+    label: 'Static values',
+    isEdited: isTextFieldEntryEdited,
+    editField,
+    field,
+  }];
+}
+
+function OptionsSourceDynamicEntry(props) {
+  const {
+    editField,
+    field
+  } = props;
+
+  return [{
+    id: 'input-options-key',
+    component: InputOptionsKey,
+    label: 'Values key',
+    description: 'Defines the input property to read possible field values from',
+    isEdited: isSelectEntryEdited,
+    editField,
+    field
+  }];
 }
 
 function OptionsSourceSelect(props) {
@@ -87,7 +108,6 @@ function OptionsSourceSelect(props) {
     getOptions: getOptionsSourceOptions,
     getValue,
     id,
-    label: 'Options Source',
     setValue
   });
 }

@@ -22,7 +22,7 @@ function getGroups(field, editField) {
 
   const groups = [
     GeneralGroup(field, editField),
-    OptionsGroup(field, editField),
+    ...OptionsGroup(field, editField),
     ValidationGroup(field, editField),
     CustomValuesGroup(field, editField)
   ];
