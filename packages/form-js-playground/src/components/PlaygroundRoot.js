@@ -23,6 +23,7 @@ export function PlaygroundRoot(props) {
   const formContainerRef = useRef();
   const dataContainerRef = useRef();
   const resultContainerRef = useRef();
+  const propertiesPanelRef = useRef();
 
   const formEditorRef = useRef();
   const formRef = useRef();
@@ -66,11 +67,18 @@ export function PlaygroundRoot(props) {
       },
       palette: {
         parent: paletteContainerRef.current
+      },
+      propertiesPanel: {
+        parent: propertiesPanelRef.current
       }
     });
 
     formEditor.on('changed', () => {
       setSchema(formEditor.getSchema());
+
+      // todo(pinussilvestrus): just showcase, remove me with something proper
+      const propertiesPanel = formEditor.get('propertiesPanel');
+      propertiesPanel._render(schema, () => {});
     });
 
     form.on('changed', event => {
@@ -174,6 +182,7 @@ export function PlaygroundRoot(props) {
           <div ref={ resultContainerRef } class="fjs-pgl-text-container"></div>
         </Section>
       </div>
+      <div class="fjs-pgl-properties-container" ref={ propertiesPanelRef } />
     </div>
   );
 }

@@ -17,11 +17,9 @@ import useService from '../hooks/useService';
 
 import { DragAndDropContext } from '../context';
 
-import PropertiesPanel from './properties-panel/PropertiesPanel';
-
 import dragula from 'dragula';
 
-import { ListDeleteIcon } from './properties-panel/icons';
+import { ListDeleteIcon } from '../../features/properties-panel/icons';
 
 import { iconsByType } from './icons';
 
@@ -151,11 +149,14 @@ export default function FormEditor(props) {
         modeling = useService('modeling'),
         selection = useService('selection'),
         palette = useService('palette'),
-        paletteConfig = useService('config.palette');
+        paletteConfig = useService('config.palette'),
+        propertiesPanel = useService('propertiesPanel'),
+        propertiesPanelConfig = useService('config.propertiesPanel');
 
   const { schema } = formEditor._getState();
 
   const paletteRef = useRef(null);
+  const propertiesPanelRef = useRef(null);
 
   const [ selectedFormField, setSelection ] = useState(schema);
 
@@ -306,6 +307,15 @@ export default function FormEditor(props) {
     }
   }, [ palette, paletteRef, hasDefaultPalette ]);
 
+  // attach default properties panel
+  const hasDefaultPropertiesPanel = defaultPropertiesPanel(propertiesPanelConfig);
+
+  useEffect(() => {
+    if (hasDefaultPropertiesPanel) {
+      propertiesPanel.attachTo(propertiesPanelRef.current);
+    }
+  }, [ propertiesPanelRef, propertiesPanel, hasDefaultPropertiesPanel ]);
+
   return (
     <div class="fjs-form-editor">
 
@@ -323,9 +333,7 @@ export default function FormEditor(props) {
         <CreatePreview />
       </DragAndDropContext.Provider>
 
-      <div class="fjs-properties-container">
-        <PropertiesPanel field={ selectedFormField } editField={ editField } />
-      </div>
+      { hasDefaultPropertiesPanel && <div class="fjs-editor-properties-container" ref={ propertiesPanelRef } /> }
     </div>
   );
 }
@@ -379,4 +387,8 @@ function CreatePreview(props) {
 
 function defaultPalette(paletteConfig) {
   return !(paletteConfig && paletteConfig.parent);
+}
+
+function defaultPropertiesPanel(propertiesPanelConfig) {
+  return !(propertiesPanelConfig && propertiesPanelConfig.parent);
 }
