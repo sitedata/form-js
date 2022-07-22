@@ -1,4 +1,5 @@
 import snarkdown from '@bpmn-io/snarkdown';
+import { get } from 'min-dash';
 
 import { sanitizeHTML } from './Sanitizer';
 
@@ -44,4 +45,48 @@ export function safeMarkdown(markdown) {
   const html = markdownToHTML(markdown);
 
   return sanitizeHTML(html);
+}
+
+export function sanitizeSingleSelectValue(options) {
+
+  const {
+    formField,
+    data,
+    value
+  } = options;
+
+  const {
+    valuesKey,
+    values
+  } = formField;
+
+  try {
+    const validValues = (valuesKey ? get(data, [ valuesKey ]) : values).map(v => v.value) || [];
+    return validValues.includes(value) ? value : null;
+  }
+  catch {
+    return null;
+  }
+}
+
+export function sanitizeMultiSelectValue(options) {
+
+  const {
+    formField,
+    data,
+    value
+  } = options;
+
+  const {
+    valuesKey,
+    values
+  } = formField;
+
+  try {
+    const validValues = (valuesKey ? get(data, [ valuesKey ]) : values).map(v => v.value) || [];
+    return value.filter(v => validValues.includes(v));
+  }
+  catch {
+    return [];
+  }
 }

@@ -149,9 +149,17 @@ export default class Importer {
       // if unavailable - get empty value from form field
 
       if (_path) {
+
+        const fieldImplementation = this._formFields.get(type);
+        let valueData = get(data, _path);
+
+        if (!isUndefined(valueData) && fieldImplementation.sanitizeValue) {
+          valueData = fieldImplementation.sanitizeValue({ formField, data, value: valueData });
+        }
+
         importedData = {
           ...importedData,
-          [_path[0]]: get(data, _path, isUndefined(defaultValue) ? this._formFields.get(type).emptyValue : defaultValue),
+          [_path[0]]: isUndefined(valueData) ? (isUndefined(defaultValue) ? fieldImplementation.emptyValue : defaultValue) : valueData,
         };
       }
 
